@@ -1,0 +1,43 @@
+body {
+	background: #f0f0f0;
+}
+
+.main {
+	margin-top: 2vh;
+}
+
+.header {
+	text-align: center;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.header-title {
+	margin-top: 7vh;
+}
+
+.header-subtitle {
+	margin-top: 5px;
+}
+
+.page-list {
+	padding: 10px;
+	text-align: center;
+}
+
+.page-box {
+	padding: 15px;
+	padding-bottom: 10px;
+}
+
+.back {
+	position: fixed;
+	top: 25px;
+	left: 25px;
+}
+
+.px5-box {
+	height: 15px;
+	min-width: 100%;
+}

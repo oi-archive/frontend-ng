@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>首页 - Oi Archive</title>
+		<link rel="stylesheet" href="./libs/mdui/css/mdui.min.css">
+		<link rel="stylesheet" href="./css/main.css">
+	</head>
+	<body class="mdui-theme-primary-teal mdui-theme-accent-blue">
+		<header class="header"> 
+			<h1 class="header-title"> Oi Archive </h1>
+			<h2 class="header-subtitle"> Index </h2>
+		</header>
+		<div id="oiarchive-main" class="mdui-card mdui-container main">
+			<div class="mdui-card-primary">
+				<div class="mdui-card-primary-title">OJ List</div>
+			</div>
+			<div id="oj-list" class="mdui-card-content">
+			</div>
+		</div>
+	</body>
+	<script src="./libs/mdui/js/mdui.min.js"></script>
+	<script src="./js/main.js"></script>
+	<script> 
+		$$( function(){  gen_oj_list( "#oj-list" ) } );
+	</script>
+</html>

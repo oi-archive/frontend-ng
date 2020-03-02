@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>Loading...</title>
+		<link rel="stylesheet" href="../libs/mdui/css/mdui.min.css">
+		<link rel="stylesheet" href="../css/main.css">
+	</head>
+	<body class="mdui-theme-primary-teal mdui-theme-accent-blue">
+		<a id="back" class="mdui-btn mdui-btn-icon mdui-ripple back"><i class="mdui-icon material-icons">arrow_back</i></a>
+		<header class="header"> 
+			<h1 class="header-title"> Oi Archive </h1>
+			<h2 id="header-sub" class="header-subtitle"> Loading... </h2/>
+			<div id="number-chip" class="mdui-chip number-chip" mdui-tooltip="{content: '题目数量'}">
+				<span class="mdui-chip-icon mdui-color-theme-accent"><i class="mdui-icon material-icons">list</i></span>
+				<span id="number-show" class="mdui-chip-title">Loading...</span>
+			</div>
+		</header>
+		<div id="page-list" class="page-list">
+			<button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent jump-page" id="jump-page-top">
+				<i class="mdui-icon material-icons">wrap_text</i>
+			</button>
+			<div class="page-box">
+				<a class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent last-page" id="last-page-top">
+					<i class="mdui-icon material-icons">chevron_left</i>
+				</a>
+				<a class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent next-page" id="next-page-top">
+					<i class="mdui-icon material-icons">chevron_right</i>
+				</a>
+			</div>
+		</div>
+		<div id="oiarchive-main" class="mdui-card mdui-container main">
+			<div class="mdui-card-primary">
+				<div class="mdui-card-primary-title"> Problem List </div>
+				<div id="show-page" class="mdui-card-primary-subtitle"> Page: Loading... </div>
+			</div>
+			<div id="content" class="mdui-card-content">
+				<div class="mdui-table-fluid">
+					<table class="mdui-table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Problem Name</th>
+							</tr>
+						</thead>
+						<tbody id="problem-list-body">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<br/>
+		<div id="page-list" class="page-list">
+			<div class="page-box">
+				<a class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent last-page" id="last-page-bottom">
+					<i class="mdui-icon material-icons">chevron_left</i>
+				</a>
+				<a class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent next-page" id="next-page-bottom">
+					<i class="mdui-icon material-icons">chevron_right</i>
+				</a>
+			</div>
+			<button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent jump-page" id="jump-page-bottom">
+				<i class="mdui-icon material-icons">wrap_text</i>
+			</button>
+		</div>
+		<br/>
+	</body>
+	<script src="../libs/mdui/js/mdui.min.js"></script>
+	<script src="../js/main.js"></script>
+	<script> 
+		var oj_id = get_urlQuery( 'oj' );
+		var page = get_urlQuery( 'page' );
+		if( page == null ) 
+			page = 1;
+		function jump_to( oj_metadata, global_page ) {
+			if( global_page > 0 && global_page <= oj_metadata.page ) 
+				window.location.href= work_addr + '/problem-set/?oj=' + oj_id + '&page=' + global_page;
+			else {
+				mdui.snackbar({ message: 'Invaild page' });
+				mdui.prompt( 'Page', 'Jump To (Max: ' + oj_metadata.page + ')', function(val){ jump_to( oj_metadata, val) } );
+			}
+		}
+		function gen_list( oj_metadata ) {
+			$$.ajax({
+				method: 'GET',
+				dataType: 'json',
+				url: api_addr + '/problem-list/' + oj_id + '/' + page,
+				success: function(data) {
+					let problem_list = $$( '#problem-list-body' );
+					data.forEach( function( item ) {
+						problem_list.append( '<tr><td>' + item.pid + 
+							'</td><td><a href="'+ work_addr + '/problem?oj=' + oj_id + '&pid=' + item.pid + '">' + 
+							item.title + '</a></td></tr>' )
+					});
+					problem_list.mutation();
+					page = page - 1 + 1;
+					$$( '.next-page' ).attr( 'href', work_addr + '/problem-set/?oj=' + oj_id + '&page=' + ( page + 1 ) );
+					$$( '.last-page' ).attr( 'href', work_addr + '/problem-set/?oj=' + oj_id + '&page=' + ( page - 1 ) );
+					$$( '.jump-page' ).on( 'click', function(e) {  
+						mdui.prompt( 'Page', 'Jump To (Max: ' + oj_metadata.page + ')', function(val){ jump_to( oj_metadata, val) } );
+					});
+					$$( '#back' ).attr( 'href', work_addr );
+				}
+			});
+		}
+		function problem_set_init() {
+			$$.ajax({
+				method: 'GET',
+				dataType: 'json',
+				url: api_addr + '/problem-set/' + oj_id + '/metadata',
+				success: function(data) {
+					$$( '#header-sub' ).text( data.name );
+					$$( '#number-show' ).text( data.problem );
+					document.title = data.name + ' - Oi Archive';
+					$$( '#show-page').text( 'Page: ' + page );
+					if( data.page == page ) 
+						$$( '#next-page' ).css( 'display', 'none' );
+					if( page == 1 ) 
+						$$( '#last-page' ).css( 'display', 'none' );
+					gen_list( data );
+				}
+			});
+		}
+		$$( function(){  problem_set_init() } );
+	</script>
+</html>
