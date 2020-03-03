@@ -115,9 +115,9 @@
 					document.title = data.name + ' - Oi Archive';
 					$$( '#show-page').text( 'Page: ' + page );
 					if( data.page == page ) 
-						$$( '#next-page' ).css( 'display', 'none' );
+						$$( '.next-page' ).css( 'display', 'none' );
 					if( page == 1 ) 
-						$$( '#last-page' ).css( 'display', 'none' );
+						$$( '.last-page' ).css( 'display', 'none' );
 					gen_list( data );
 				}
 			});
