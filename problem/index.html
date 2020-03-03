@@ -9,16 +9,16 @@
 	</head>
 	<body class="mdui-theme-primary-teal mdui-theme-accent-blue">
 		<a id="back" class="mdui-btn mdui-btn-icon mdui-ripple back"><i class="mdui-icon material-icons">arrow_back</i></a>
-		<header class="header"> 
+		<header class="header">
 			<h1 class="header-title"> Oi Archive </h1>
 			<h2 id="header-subtitle" class="header-subtitle"> Problem </h2>
 		</header>
 		<div id="oiarchive-main" class="mdui-card mdui-container main">
 			<div class="mdui-card-primary">
 				<div id="problem-name" class="mdui-card-primary-title">Loading...</div>
-				<div id="problem-more" class="mdui-card-primary-subtitle">Loading...</div>
+				<div id="problem-details" class="mdui-card-primary-subtitle">Loading...</div>
 			</div>
-			<div id="problem-content" class="mdui-card-content">
+			<div id="problem-content" class="mdui-card-content mdui-typo">
 				Loading...
 			</div>
 		</div>
@@ -28,58 +28,16 @@
 		</a>
 	</body>
 	<script src="../libs/mdui/js/mdui.min.js"></script>
-	<script src="../js/main.js"></script>
+	<script src="../js/main.js?v=8cc009"></script>
 	<script>
 		MathJax = { tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]} };
 	</script>
 	<script type="text/javascript" async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-	<script> 
-		var oj = get_urlQuery( 'oj' );
-		var problem_id = get_urlQuery( 'pid' );
-		function gen_problem() {
-			$$.ajax({
-				method: 'GET',
-				dataType: 'json',
-				url: api_addr + '/problem-set/' + oj + '/metadata',
-				success: function(data){
-					$$( '#header-subtitle' ).text( data.name + ' ' + problem_id );
-				}
-			});
-			$$.ajax({
-				method: 'GET',
-				url: api_addr + '/problem/' + oj + '/' + problem_id,
-				dataType: 'json',
-				success: function(data) {
-					$$( '#problem-name' ).text( data.title );
-					document.title = data.title + ' - Oi Archive';
-					let more_text = 'Memory: ' + data.memory + ' MB Time: ' + data.time + ' ms';
-					if( data.judge != '' ) 
-						more_text = 'Judge type: ' + data.judge + ' ' + more_text;
-					$$( '#problem-more' ).text( more_text );
-					$$( '#problem-content' ).html( data.description );
-					$$('pre').each( function( i, obj ) {
-						obj = $$(obj);
-						let uuid = $$.guid( obj.text() );
-						let text = obj.text();
-						while( text.charAt( text.length - 1 ) == '\n' ) 
-							text = text.substring( 0, text.length - 1 );
-						obj.text(text)
-						$$(obj).after( '<div id="' + uuid + '" class="mdui-typo"></div>' );
-						$$( '#' + uuid ).append(obj);
-						$$( '#' + uuid ).reflow();
-					});
-					$$( 'table' ).addClass( 'mdui-table' );
-					$$( 'td' ).css( 'border', '0' );
-					$$( 'td' ).css( 'border-bottom', '1px solid rgba(0,0,0,.12)' );
-					$$( '#ori_button' ).attr( 'href', data.url );
-					$$( '#back' ).attr( 'href', work_addr + '/problem-set?oj=' + oj );
-					$$( '#problem-content' ).mutation();
-					MathJax.startup.defaultReady();
-				}
-			});
-		}
-		$$( function(){  
-			gen_problem(); 
-		} );
+	<script defer src="../js/problem.js?v=4d0834"></script>
+	<script>
+		$$(() => {
+			init_subtitle('#header-subtitle');
+			request_problem('#oiarchive-main');
+		});
 	</script>
 </html>
