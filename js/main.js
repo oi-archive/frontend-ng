@@ -1,6 +1,6 @@
 const $$ = mdui.JQ;
-const api_addr = "https://m1.oi-archive.org:8002";
-const work_addr = "/";
+const api_addr = "https://m1.oi-archive.org:9000/api";
+const work_addr = "";
 
 // Unit Function
 function get_urlQuery(name) {
