@@ -28,16 +28,20 @@
 		</a>
 	</body>
 	<script src="../libs/mdui/js/mdui.min.js"></script>
-	<script src="../js/main.js?v=8cc009"></script>
+	<script src="../js/config.js"></script>
+	<script src="../js/main.js?v=0cba20"></script>
+	<script defer src="../js/problem.js?v=c35156"></script>
 	<script>
 		MathJax = { tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]} };
 	</script>
 	<script type="text/javascript" async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-	<script defer src="../js/problem.js?v=4d0834"></script>
 	<script>
 		$$(() => {
-			init_subtitle('#header-subtitle');
-			request_problem('#oiarchive-main');
+			Gen_Subtitle('#header-subtitle');
+			Gen_Problem( '#oiarchive-main' ).then( () => {
+				$$( '#problem-content' ).mutation();
+				MathJax.startup.defaultReady();
+			});
 		});
 	</script>
 </html>

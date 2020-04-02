@@ -1,78 +1,84 @@
-const oj_id = get_urlQuery( 'oj' );
-let page = get_urlQuery( 'page' );
-if( page == null )
-	page = 1;
-function jump_to( oj_metadata, global_page ) {
-	if( global_page > 0 && global_page <= oj_metadata.page )
+const OJ_Name = get_urlQuery( 'oj' );
+let Page = get_urlQuery( 'page' );
+if( Page == null )
+	Page = 1;
+
+function Turn_To( OJ_metadata, goal_page ) {
+	if( goal_page > 0 && goal_page <= OJ_metadata.page )
 		window.location.href=
-			`${work_addr}/problem-set/?oj=${oj_id}&page=${global_page}`;
+			`${work_addr}/problem-set/?oj=${OJ_Name}&page=${goal_page}`;
 	else {
 		mdui.snackbar({ message: 'Invaild page' });
-		mdui.prompt( 'Page', `Jump To (Max: ${oj_metadata.page})`,
-		function(val){ jump_to( oj_metadata, val) }, function(){},
+		mdui.prompt( 'Page', `Jump To (Max: ${OJ_metadata.page})`,
+		(val) => { Turn_To( OJ_metadata, val ) }, () => {},
 		{ confirmOnEnter: true } );
 	}
 }
-function process_pages( oj_metadata ) {
-	if( oj_metadata.page == page )
-		$$( '.next-page' ).css( 'display', 'none' );
-	if( page == 1 )
-		$$( '.last-page' ).css( 'display', 'none' );
-	page = page - 1 + 1;
-	$$( '.next-page' ).attr( 'href',
-		`${work_addr}/problem-set/?oj=${oj_id}&page=${page + 1 }` );
-	$$( '.last-page' ).attr( 'href',
-		`${work_addr}/problem-set/?oj=${oj_id}&page=${page + 1 }` );
-	$$( '.jump-page' ).on( 'click', function(e) {
-		mdui.prompt( 'Page', `Jump To (Max: ${oj_metadata.page} )`,
-		function(val){ jump_to( oj_metadata, val) }, function(){},
+
+async function Init_PageTurn( LastPage_Container, NextPage_Container, Turn_btn ) {
+	let OJ_metadata;
+	try {
+		OJ_metadata = await Query_OJMetadata( OJ_Name );
+	}
+	catch(e) {
+		mdui.snackbar( { message: e } ); 
+		return ; 
+	}
+
+	if( OJ_metadata.page == Page )
+		$$( NextPage_Container ).css( 'display', 'none' );
+	if( Page == 1 )
+		$$( LastPage_Container ).css( 'display', 'none' );
+	Page = Page - 1 + 1;
+	$$( NextPage_Container ).attr( 'href',
+		`${work_addr}/problem-set/?oj=${OJ_Name}&page=${Page + 1}` );
+	$$( LastPage_Container ).attr( 'href',
+		`${work_addr}/problem-set/?oj=${OJ_Name}&page=${Page - 1}` );
+	$$( Turn_btn ).on( 'click', function(e) {
+		mdui.prompt( 'Page', `Jump To (Max: ${OJ_metadata.page} )`,
+		(val) => { Turn_To( OJ_metadata, val) }, function(){},
 		{ confirmOnEnter: true } );
 	});
 }
-function process_title(data) {
-	$$( '#header-sub' ).text( data.name );
-	$$( '#number-show' ).text( data.problem );
-	document.title = `${data.name} - Oi Archive`;
-	$$( '#show-page').text( `Page: ${page}` );
+
+async function Gen_OJTitle( OJName_Container, ProblemNumber_Container, Page_Container ) {
+	let OJ_metadata;
+	try {
+		OJ_metadata = await Query_OJMetadata( OJ_Name );
+	}
+	catch(e) {
+		mdui.snackbar( { message: e } ); 
+		return ; 
+	}
+
+	document.title = `${OJ_metadata.name} - Oi Archive`;
+	$$(OJName_Container).text( OJ_metadata.name );
+	$$(ProblemNumber_Container).text( OJ_metadata.problem );
+	$$(Page_Container).text( `Page: ${Page}` );
 }
-function gen_list( oj_metadata ) {
-	$$.ajax({
-		method: 'GET',
-		dataType: 'json',
-		url: api_addr + '/problem-list/' + oj_id + '/' + page,
-		success(data) {
-			let problem_list = $$( '#problem-list-body' );
-			data.forEach( function( item ) {
-				let tr_html =
-				`<tr> \
-					<td> ${item.pid} </td> \
+
+async function Gen_ProblemList( OJ_Name, page, ProblemList_Container ) {
+	let ProblemList_Data;
+	try {
+		ProblemList_Data = await Query_ProblemList( OJ_Name, page );
+	}
+	catch(e) {
+		mdui.snackbar( { message: e } ); 
+		return ; 
+	}
+
+	let  = $$( '#problem-list-body' );
+	ProblemList_Data.forEach( function( problem_unit ) {
+		let ProblemUnit_html =
+			`<tr> \
+					<td> ${problem_unit.pid} </td> \
 					<td> \
-						<a href="${work_addr}/problem?oj=${oj_id}&pid=${item.pid}"> \
-							${item.title} \
+						<a href="${work_addr}/problem?oj=${OJ_Name}&pid=${problem_unit.pid}"> \
+							${problem_unit.title} \
 						</a> \
 					</td> \
 				</tr>`;
-				problem_list.append( tr_html )
-			});
-			problem_list.mutation();
-		},
-		error() {
-			mdui.snackbar({ message: 'Error' });
-		}
+		$$(ProblemList_Container).append( ProblemUnit_html )
 	});
-}
-function problem_set_init() {
-	$$.ajax({
-		method: 'GET',
-		dataType: 'json',
-		url: `${api_addr}/problem-set/${oj_id}/metadata`,
-		success(data) {
-			process_title(data);
-			process_pages(data);
-			gen_list( data );
-		},
-		error() {
-			mdui.snackbar({ message: 'Error' });
-		}
-	});
+	$$(ProblemList_Container).mutation();
 }

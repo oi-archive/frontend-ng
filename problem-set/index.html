@@ -18,7 +18,7 @@
 			</div>
 		</header>
 		<div id="page-list" class="page-list">
-			<button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent jump-page" id="jump-page-top">
+			<button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent turn-page" id="turn-page-top">
 				<i class="mdui-icon material-icons">wrap_text</i>
 			</button>
 			<div class="page-box">
@@ -60,18 +60,21 @@
 					<i class="mdui-icon material-icons">chevron_right</i>
 				</a>
 			</div>
-			<button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent jump-page" id="jump-page-bottom">
+			<button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent turn-page" id="turn-page-bottom">
 				<i class="mdui-icon material-icons">wrap_text</i>
 			</button>
 		</div>
 		<br/>
 	</body>
 	<script src="../libs/mdui/js/mdui.min.js"></script>
-	<script src="../js/main.js?v=8cc009"></script>
-	<script src="../js/problem_set.js?v=b3cb25"></script>
+	<script src="../js/config.js"></script>
+	<script src="../js/main.js?v=0cba20"></script>
+	<script src="../js/problem_set.js?v=b3740f"></script>
 	<script>
 		$$(() => {
-			problem_set_init();
+			Gen_ProblemList( OJ_Name, Page, '#problem-list-body' );
+			Gen_OJTitle( '#header-sub', '#number-show', '#show-page' );
+			Init_PageTurn( '.last-page', '.next-page', '.turn-page' );
 			$$( '#back' ).attr( 'href', work_addr );
 		});
 	</script>
