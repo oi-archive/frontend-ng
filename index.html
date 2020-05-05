@@ -12,11 +12,16 @@
 			<h1 class="header-title"> Oi Archive </h1>
 			<h2 class="header-subtitle"> Index </h2>
 		</header>
-		<div id="oiarchive-main" class="mdui-card mdui-container main">
+		<div id="oiarchive-main" class="mdui-card mdui-container main hidden-opacity">
 			<div class="mdui-card-primary">
 				<div class="mdui-card-primary-title">OJ List</div>
 			</div>
 			<div id="oj-list" class="mdui-card-content">
+			</div>
+		</div>
+		<div id="loading">
+			<div class="mdui-progress">
+				<div class="mdui-progress-indeterminate"></div>
 			</div>
 		</div>
 	</body>
@@ -24,6 +29,10 @@
 	<script src="./js/config.js"></script>
 	<script src="./js/main.js?v=0cba20"></script>
 	<script>
-		$$(() => {  Gen_OJList( "#oj-list" ) });
+		$$( async() => {  
+			await Gen_OJList( "#oj-list" );
+			await $$( "#oiarchive-main" ).addClass( "fadein-bottom" );
+			$$( '#loading' ).addClass( 'fadeout-top' );
+		});
 	</script>
 </html>

@@ -6,7 +6,7 @@ if( Page == null )
 function Turn_To( OJ_metadata, goal_page ) {
 	if( goal_page > 0 && goal_page <= OJ_metadata.page )
 		window.location.href=
-			`${work_addr}/problem-set/?oj=${OJ_Name}&page=${goal_page}`;
+			`${work_addr}/problem-set/index.html?oj=${OJ_Name}&page=${goal_page}`;
 	else {
 		mdui.snackbar({ message: 'Invaild page' });
 		mdui.prompt( 'Page', `Jump To (Max: ${OJ_metadata.page})`,
@@ -31,9 +31,9 @@ async function Init_PageTurn( LastPage_Container, NextPage_Container, Turn_btn )
 		$$( LastPage_Container ).css( 'display', 'none' );
 	Page = Page - 1 + 1;
 	$$( NextPage_Container ).attr( 'href',
-		`${work_addr}/problem-set/?oj=${OJ_Name}&page=${Page + 1}` );
+		`${work_addr}/problem-set/index.html?oj=${OJ_Name}&page=${Page + 1}` );
 	$$( LastPage_Container ).attr( 'href',
-		`${work_addr}/problem-set/?oj=${OJ_Name}&page=${Page - 1}` );
+		`${work_addr}/problem-set/index.html?oj=${OJ_Name}&page=${Page - 1}` );
 	$$( Turn_btn ).on( 'click', function(e) {
 		mdui.prompt( 'Page', `Jump To (Max: ${OJ_metadata.page} )`,
 		(val) => { Turn_To( OJ_metadata, val) }, function(){},
@@ -73,7 +73,7 @@ async function Gen_ProblemList( OJ_Name, page, ProblemList_Container ) {
 			`<tr> \
 					<td> ${problem_unit.pid} </td> \
 					<td> \
-						<a href="${work_addr}/problem?oj=${OJ_Name}&pid=${problem_unit.pid}"> \
+						<a href="${work_addr}/problem/index.html?oj=${OJ_Name}&pid=${problem_unit.pid}"> \
 							${problem_unit.title} \
 						</a> \
 					</td> \

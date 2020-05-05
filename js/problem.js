@@ -45,7 +45,7 @@ function Init_Table( ProblemContent_Container ) {
 
 function Init_btn( Problem_Data ) {
 	$$( '#ori_button' ).attr( 'href', Problem_Data.url );
-	$$( '#back' ).attr( 'href', `${work_addr}/problem-set?oj=${OJ_Name}` );
+	$$( '#back' ).attr( 'href', `${work_addr}/problem-set/index.html?oj=${OJ_Name}` );
 }
 
 async function Gen_Problem( ProblemCard ) {

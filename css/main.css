@@ -1,3 +1,104 @@
+/* **********************
+ * Animation
+ * **********************/
+*, ::after, ::before {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/*--动画定义*/
+@keyframes fadeInTop {
+    from {
+        opacity: 0;
+        transform: translateY(-35px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInBottom {
+    from {
+        opacity: 0;
+        transform: translateY(35px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutTop {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-35px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.hidden-opacity {
+	opacity: 0;
+}
+
+.fadein-bottom {
+	opacity: 1;
+	display: block;
+	animation: fadeInBottom .5s ease;
+}
+
+.fadein {
+	opacity: 1;
+	display: block;
+	animation: fadeIn .5s ease;
+}
+
+.fadeout-top {
+	opacity: 0;
+	animation: fadeOutTop .5s ease;
+}
+
+/* **********************
+ * Main 
+ * **********************/
+#loading {
+	position: fixed;
+	z-index: 3000;
+	left: 0;
+	right: 0;
+	top: 0;
+}
+#loading >div {
+	height: 5px;
+	width: 100%;
+}
+
 body {
 	background: #f0f0f0;
 }

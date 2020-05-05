@@ -73,7 +73,7 @@ async function Gen_OJList( selector ) {
 	}
 
 	OJ_List.forEach((OJ_Unit) => {
-		const OJ_btn = `<a class=\"mdui-btn mdui-btn-block mdui-ripple problemset-link\" href=\"${work_addr}/problem-set/?oj=${OJ_Unit.Id}\">${OJ_Unit.Name}</a>`;
+		const OJ_btn = `<a class=\"mdui-btn mdui-btn-block mdui-ripple problemset-link\" href=\"${work_addr}/problem-set/index.html?oj=${OJ_Unit.Id}\">${OJ_Unit.Name}</a>`;
 		$$(selector).append( OJ_btn );
 	});
 }

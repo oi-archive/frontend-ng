@@ -13,7 +13,7 @@
 			<h1 class="header-title"> Oi Archive </h1>
 			<h2 id="header-subtitle" class="header-subtitle"> Problem </h2>
 		</header>
-		<div id="oiarchive-main" class="mdui-card mdui-container main">
+		<div id="oiarchive-main" class="mdui-card mdui-container main hidden-opacity">
 			<div class="mdui-card-primary">
 				<div id="problem-name" class="mdui-card-primary-title">Loading...</div>
 				<div id="problem-details" class="mdui-card-primary-subtitle">Loading...</div>
@@ -23,9 +23,14 @@
 			</div>
 		</div>
 		<div class="px5-box"></div>
-		<a target="_blank" id="ori_button" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent" mdui-tooltip="{content: '跳转到原 OJ'}">
+		<a target="_blank" id="ori_button" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent hidden-opacity" mdui-tooltip="{content: '跳转到原 OJ'}">
 			<i class="mdui-icon material-icons">link</i>
 		</a>
+		<div id="loading">
+			<div class="mdui-progress">
+				<div class="mdui-progress-indeterminate"></div>
+			</div>
+		</div>
 	</body>
 	<script src="../libs/mdui/js/mdui.min.js"></script>
 	<script src="../js/config.js"></script>
@@ -36,12 +41,15 @@
 	</script>
 	<script type="text/javascript" async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 	<script>
-		$$(() => {
-			Gen_Subtitle('#header-subtitle');
-			Gen_Problem( '#oiarchive-main' ).then( () => {
+		$$( async() => {
+			await Gen_Subtitle('#header-subtitle');
+			await Gen_Problem( '#oiarchive-main' ).then( () => {
 				$$( '#problem-content' ).mutation();
 				MathJax.startup.defaultReady();
 			});
+			await $$( '#oiarchive-main' ).addClass( 'fadein' );
+			$$( '#ori_button' ).addClass( 'fadein-bottom' );
+			$$( '#loading' ).addClass( 'fadeout-top' );
 		});
 	</script>
 </html>
