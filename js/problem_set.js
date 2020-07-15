@@ -29,6 +29,10 @@ async function Init_PageTurn( LastPage_Container, NextPage_Container, Turn_btn )
 		$$( NextPage_Container ).css( 'display', 'none' );
 	if( Page == 1 )
 		$$( LastPage_Container ).css( 'display', 'none' );
+	if( Page == -1 || Page == "All" ) {
+		$$( NextPage_Container ).css( 'display', 'none' );
+		$$( LastPage_Container ).css( 'display', 'none' );
+	}
 	Page = Page - 1 + 1;
 	$$( NextPage_Container ).attr( 'href',
 		`${work_addr}/problem-set/index.html?oj=${OJ_Name}&page=${Page + 1}` );
@@ -53,14 +57,36 @@ async function Gen_OJTitle( OJName_Container, ProblemNumber_Container, Page_Cont
 
 	document.title = `${OJ_metadata.name} - Oi Archive`;
 	$$(OJName_Container).text( OJ_metadata.name );
-	$$(ProblemNumber_Container).text( OJ_metadata.problem );
+	$$(ProblemNumber_Container).text( `题目数量: ${OJ_metadata.problem}` );
+	$$(ProblemNumber_Container).parent().attr( 'href',
+		`${work_addr}/problem-set/index.html?oj=${OJ_Name}&page=-1` );
+	if( Page == -1 ) 
+		Page = 'All';
 	$$(Page_Container).text( `Page: ${Page}` );
 }
 
 async function Gen_ProblemList( OJ_Name, page, ProblemList_Container ) {
-	let ProblemList_Data;
+	let OJ_metadata;
+	let ProblemList_Data = [];
+
 	try {
-		ProblemList_Data = await Query_ProblemList( OJ_Name, page );
+		OJ_metadata = await Query_OJMetadata( OJ_Name );
+	}
+	catch(e) {
+		mdui.snackbar( { message: e } ); 
+		return ; 
+	}
+
+	try {
+		if( page != -1 ) {
+			ProblemList_Data.push.apply( ProblemList_Data, await Query_ProblemList( OJ_Name, page ) );
+		}
+		else {
+			let cur_page;
+			for( cur_page = 1; cur_page <= OJ_metadata.page; cur_page ++ ) {
+				ProblemList_Data.push.apply( ProblemList_Data, await Query_ProblemList( OJ_Name, cur_page ) );
+			}
+		}
 	}
 	catch(e) {
 		mdui.snackbar( { message: e } ); 

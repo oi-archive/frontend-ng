@@ -142,3 +142,7 @@ body {
 	height: 15px;
 	min-width: 100%;
 }
+
+#number-show {
+	color: black;
+}
